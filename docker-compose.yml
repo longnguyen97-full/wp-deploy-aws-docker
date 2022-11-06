@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db.localhost:
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=wp_deploy_aws_docker
+      - MYSQL_ROOT_PASSWORD=liamliam
+    volumes:
+      - './database:/var/lib/mysql'
+  wordpress:
+    image: wordpress
+    links:
+      - 'db.localhost:mysql'
+    environment:
+      - WORDPRESS_DB_NAME=wp_deploy_aws_docker
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=liamliam
+      - WORDPRESS_DB_HOST=db.localhost:3306
+    ports:
+      - '172.19.242.197:8000:80'
+    volumes:
+      - './src:/var/www/html'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '172.19.242.197:8080:8080'
